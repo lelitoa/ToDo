@@ -18,7 +18,7 @@ function Register() {
     <div>
         <div className={styles.login__card}>
             <img src={login} alt=".."/>
-            <h4>Register</h4>
+            <h2>Register</h2>
             <div className={styles.input__inline__wrapper}>
                 <Input 
                 placeholder="First Name" 
