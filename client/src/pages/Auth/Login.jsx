@@ -1,14 +1,16 @@
 import React, {useState} from 'react';
 import styles from './Login.module.css';
 import login from '../../assets/login.png';
-import {Button, Input} from 'antd';
-import {Link} from 'react-router-dom';
+import {Button, Input, message} from 'antd';
+import {Link, useNavigate} from 'react-router-dom';
 import AuthServices from '../../services/authServices';
+import { getErrorMessage } from '../../util/GetError';
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const  handleSubmit = async ()=>{
         try{
@@ -19,9 +21,13 @@ function Login() {
             }
             const response = await AuthServices.loginUser(data);
             console.log(response.data);
+            localStorage.setItem('toDoAppUser',JSON.stringify(response.data));
+            message.success("Logged in Successfully!");
+            navigate('/to-do-list');
             setLoading(false);
         } catch(err){
             console.log(err);
+            message.error(getErrorMessage(err));
             setLoading(false);
         } 
     }
