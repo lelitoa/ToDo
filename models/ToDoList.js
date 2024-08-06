@@ -3,7 +3,7 @@ const {Schema} = mongoose;
 
 const toDoSchema = new Schema({
     title: {type: String, required: true},
-    descripton: {type: String, required: true},
+    description: {type: String, required: true},
     isCompleted: {type: String, required: true},
     completedOn: String,
     createdBy: {
