@@ -5,7 +5,7 @@ const SERVER_URL = 'http://localhost:5000/api/todo';
 
 const authHeaders = ()=>{
     let userToken = getUserDetails()?.token;
-    return {headers: {'Authorization:': userToken}}
+    return {headers: {'Authorization': userToken}}
 }
 
 const createToDo = (data)=>{
