@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import styles from './ToDoList.module.css';
 import { Button, Divider, Input, message, Modal } from 'antd';
 import { getErrorMessage } from '../../util/GetError';
 import { getUserDetails } from '../../util/GetUser';
 import ToDoServices from '../../services/toDoServices';
+import { useNavigate } from 'react-router';
 
 function ToDoList() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    let user = getUserDetails();
+
+    const getAllToDo = async ()=> {
+      try {
+        const response = await ToDoServices.getAllToDo(user?.userId);
+        console.log(response.data);
+
+      } catch (err) {
+        console.log(err);
+        message.error(getErrorMessage(err));
+      }
+    }
+    if(user && user?.userId){
+      getAllToDo();
+    }else{
+      navigate('/login');
+    }
+
+  },[navigate])
 
   const handleSubmitTask = async ()=> {
     setLoading(true);
