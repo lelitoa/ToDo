@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import styles from './ToDoList.module.css';
-import { Button, Divider, Input, Modal, Tag, Tooltip, message } from 'antd';
+import { Button, Divider, Input, Modal, Select, Tag, Tooltip, message } from 'antd';
 import { getErrorMessage } from '../../util/GetError';
 import { getUserDetails } from '../../util/GetUser';
 import ToDoServices from '../../services/toDoServices';
 import { useNavigate } from 'react-router';
 import { CheckCircleFilled, CheckCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+// import { set } from 'mongoose';
 
 function ToDoList() {
   const [title, setTitle] = useState("");
@@ -14,6 +15,12 @@ function ToDoList() {
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allToDo, setAllToDo] = useState([]);
+  const [ currentEditItem, setCurrentEditItem] = useState("");
+  const [ isEditing, setIsEditing] = useState(false);
+  const [ updatedTitle, setUpdatedTitle] = useState("");
+  const [ updatedDescription, setUpdatedDescription] = useState("");
+  const [ updatedStatus, setUpdatedStatus] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -72,6 +79,8 @@ function ToDoList() {
 
   const handleEdit = (item) => {
     console.log(item);
+    setCurrentEditItem(item);
+    setIsEditing(true);             
   }
 
   const handleDelete = (item) => {
@@ -80,6 +89,20 @@ function ToDoList() {
 
   const handleUpdateStatus = (id) => {
     console.log(id);
+  }
+
+  const handleUpdateTask = async ()=> {
+    try {
+      const data = {
+        title: updatedTitle,
+        description: updatedDescription,
+        isCompleted: updatedStatus
+      }
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+      message.error(getErrorMessage(err));
+    }
   }
 
   return (
@@ -125,6 +148,26 @@ function ToDoList() {
         <Input.TextArea placeholder='Description' value={description} onChange={(e)=>setDescription(e.target.value)} />
       </Modal>
 
+      <Modal confirmLoading={loading} title={`Update ${currentEditItem.title}`} open={isEditing} onOk={handleUpdateTask} onCancel={()=>setIsEditing(false)}>
+        <Input style={{marginBottom:'1rem'}} placeholder='Updated Title' value={updatedTitle} onChange={(e)=>setUpdatedTitle(e.target.value)} />
+        <Input.TextArea style={{marginBottom:'1rem'}} placeholder='Updated Description' value={updatedDescription} onChange={(e)=>setUpdatedDescription(e.target.value)} />
+        
+        <Select
+          onChange={(value)=>setUpdatedStatus(value)}
+          value={updatedStatus}
+
+          options={[
+          {
+            value: false,
+            label: 'Not Completed',
+          },
+          {
+            value: true,
+            label: 'Completed',
+          },
+          ]}
+        />
+      </Modal>
     </section>
   </>
 )
