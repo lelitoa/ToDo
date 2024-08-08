@@ -23,6 +23,20 @@ function ToDoList() {
 
   const navigate = useNavigate();
 
+  const getAllToDo = async ()=> {
+    try {
+      let user = getUserDetails();
+
+      console.log(user?.userId);
+      const response = await ToDoServices.getAllToDo(user?.userId);
+      console.log(response.data);
+      setAllToDo(response.data);  
+    } catch (err) {
+      console.log(err);
+      message.error(getErrorMessage(err));
+    }
+  }
+
   useEffect(()=>{
     let user = getUserDetails();
 
@@ -60,6 +74,7 @@ function ToDoList() {
       setLoading(false);
       message.success("To Do Task Added Successfully!");
       setIsAdding(false);
+      getAllToDo(); 
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -86,8 +101,16 @@ function ToDoList() {
     setIsEditing(true);       
   }
 
-  const handleDelete = (item) => {
-    console.log(item);
+  const handleDelete = async (item) => {
+    try {
+      const response = await ToDoServices.deleteToDo(item._id);
+      console.log(response.data);
+      message.success(`${item.title} is Delted Seccessfully`);
+      getAllToDo();
+    } catch (err) {
+      console.log(err);
+      console.log(getErrorMessage(err));
+    }
   }
 
   const handleUpdateStatus = (id) => {
@@ -108,6 +131,7 @@ function ToDoList() {
       message.success(`${currentEditItem?.title} Updated Successfully!`);
       setLoading(false);
       setIsEditing(false);
+      getAllToDo();
     } catch (err) {
       console.log(err);
       setLoading(true);
