@@ -80,7 +80,10 @@ function ToDoList() {
   const handleEdit = (item) => {
     console.log(item);
     setCurrentEditItem(item);
-    setIsEditing(true);             
+    setUpdatedTitle(item?.title);
+    setUpdatedDescription(item?.description);
+    setUpdatedStatus(item?.isCompleted);
+    setIsEditing(true);       
   }
 
   const handleDelete = (item) => {
@@ -93,14 +96,21 @@ function ToDoList() {
 
   const handleUpdateTask = async ()=> {
     try {
+      setLoading(true);
       const data = {
         title: updatedTitle,
         description: updatedDescription,
         isCompleted: updatedStatus
       }
       console.log(data);
+      const response = await ToDoServices.updateToDo(currentEditItem?._id, data);
+      console.log(response.data);
+      message.success(`${currentEditItem?.title} Updated Successfully!`);
+      setLoading(false);
+      setIsEditing(false);
     } catch (err) {
       console.log(err);
+      setLoading(true);
       message.error(getErrorMessage(err));
     }
   }
