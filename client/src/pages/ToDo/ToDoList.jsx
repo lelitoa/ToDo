@@ -113,8 +113,18 @@ function ToDoList() {
     }
   }
 
-  const handleUpdateStatus = (id) => {
+  const handleUpdateStatus = async (id, status) => {
     console.log(id);
+    
+    try {
+      const response = await ToDoServices.updateToDo(id, {isCompleted:status});
+      console.log(response.data);
+      message.success("Task Status Updated Successfully!");
+      getAllToDo();
+    } catch (err) {
+      console.log(err);
+      console.log(getErrorMessage(err));
+    }
   }
 
   const handleUpdateTask = async ()=> {
