@@ -12,7 +12,7 @@ function ToDoList() {
   const [description, setDescription] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [getAllToDo, set]
+  const [getAllToDo, setAllToDo] = useState("");
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -23,7 +23,7 @@ function ToDoList() {
         console.log(user?.userId);
         const response = await ToDoServices.getAllToDo(user?.userId);
         console.log(response.data);
-
+        setAllToDo(response.data);  
       } catch (err) {
         console.log(err);
         message.error(getErrorMessage(err));
@@ -71,6 +71,8 @@ function ToDoList() {
         </div>
       </div>
       <Divider />
+
+      
       
       <Modal confirmLoading={loading} title="Add New To Do Task" open={isAdding} onOk={handleSubmitTask} onCancel={()=>setIsAdding(false)}>
         <Input style={{marginBottom:'1rem'}} placeholder='Title' value={title} onChange={(e)=>setTitle(e.target.value)} />
