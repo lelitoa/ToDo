@@ -7,7 +7,6 @@ import { getUserDetails } from '../../util/GetUser';
 import ToDoServices from '../../services/toDoServices';
 import { useNavigate } from 'react-router';
 import { CheckCircleFilled, CheckCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-// import { set } from 'mongoose';
 
 function ToDoList() {
   const [title, setTitle] = useState("");
@@ -15,13 +14,15 @@ function ToDoList() {
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allToDo, setAllToDo] = useState([]);
-  const [ currentEditItem, setCurrentEditItem] = useState("");
-  const [ isEditing, setIsEditing] = useState(false);
-  const [ updatedTitle, setUpdatedTitle] = useState("");
-  const [ updatedDescription, setUpdatedDescription] = useState("");
-  const [ updatedStatus, setUpdatedStatus] = useState("");
-  const [ currentTaskType, setCurrentTaskType ] = useState("incomplete");
-
+  const [currentEditItem, setCurrentEditItem] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedTitle, setUpdatedTitle] = useState("");
+  const [updatedDescription, setUpdatedDescription] = useState("");
+  const [updatedStatus, setUpdatedStatus] = useState("");
+  const [currentTaskType, setCurrentTaskType ] = useState("incomplete");
+  const [completedToDo, setCompletedToDo] = useState([]);
+  const [inCompletedToDo, setInCompletedToDo] = useState([]);
+  const [currentToDoTask, setCurrentToDoTask] = useState([]);
 
   const navigate = useNavigate();
 
@@ -59,7 +60,21 @@ function ToDoList() {
       navigate('/login');
     }
 
-  },[navigate])
+  },[navigate]);
+
+  useEffect(()=>{
+    const incomplete = allToDo.filter((item) => item.isCompleted === false);
+    const complete = allToDo.filter((item) => item.isCompleted === true);
+
+    setInCompletedToDo(incomplete);
+    setCompletedToDo(complete);
+
+    if(currentTaskType === 'incomplete') {
+      setCurrentToDoTask(inCompletedToDo);
+    } else {
+      setCurrentToDoTask(completedToDo);
+    }
+  },[allToDo]);
 
   const handleSubmitTask = async ()=> {
     setLoading(true);
@@ -76,7 +91,7 @@ function ToDoList() {
       setLoading(false);
       message.success("To Do Task Added Successfully!");
       setIsAdding(false);
-      getAllToDo(); 
+      getAllToDo();
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -154,6 +169,11 @@ function ToDoList() {
   const handleTypeChange = (value) => {
     console.log(value);
     setCurrentTaskType(value);
+    if(value==='incomplete'){
+      setCurrentToDoTask(inCompletedToDo);
+    } else {
+      setCurrentToDoTask(completedToDo);
+    }
   }
 
   return (
@@ -167,8 +187,9 @@ function ToDoList() {
           <Button onClick={()=>setIsAdding(true)} type="primary" size="large">Add Task</Button>
           <Select
             value={currentTaskType}
-            style={{width: 180}}
+            style={{width: 180, marginLeft: '10px'}}
             onChange={handleTypeChange}
+            size='large'
             options={[
               {value: "incomplete", label: "Incomplete"},
               {value: "complete", label: "Complete"}
@@ -180,7 +201,7 @@ function ToDoList() {
       <Divider />
 
       <div className={styles.toDoListCardWrapper}>
-        {allToDo.map((item)=>{
+        {currentToDoTask.map((item)=>{
           return(
             <div key={item?._id} className={styles.toDoCard}>
               <div>
