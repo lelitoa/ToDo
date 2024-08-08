@@ -20,6 +20,8 @@ function ToDoList() {
   const [ updatedTitle, setUpdatedTitle] = useState("");
   const [ updatedDescription, setUpdatedDescription] = useState("");
   const [ updatedStatus, setUpdatedStatus] = useState("");
+  const [ currentTaskType, setCurrentTaskType ] = useState("incomplete");
+
 
   const navigate = useNavigate();
 
@@ -149,6 +151,11 @@ function ToDoList() {
     }
   }
 
+  const handleTypeChange = (value) => {
+    console.log(value);
+    setCurrentTaskType(value);
+  }
+
   return (
   <>
     <Navbar active={"myTask"} />
@@ -158,6 +165,16 @@ function ToDoList() {
         <Input style={{width: '50%'}} placeholder='Search Your Task Here...' />
         <div>
           <Button onClick={()=>setIsAdding(true)} type="primary" size="large">Add Task</Button>
+          <Select
+            value={currentTaskType}
+            style={{width: 180}}
+            onChange={handleTypeChange}
+            options={[
+              {value: "incomplete", label: "Incomplete"},
+              {value: "complete", label: "Complete"}
+            ]}
+          
+          />
         </div>
       </div>
       <Divider />
