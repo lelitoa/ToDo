@@ -12,6 +12,7 @@ function ToDoList() {
   const [description, setDescription] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
+  // const [getAllToDo, set]
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -19,6 +20,7 @@ function ToDoList() {
 
     const getAllToDo = async ()=> {
       try {
+        console.log(user?.userId);
         const response = await ToDoServices.getAllToDo(user?.userId);
         console.log(response.data);
 
@@ -43,7 +45,7 @@ function ToDoList() {
         title,
         description,
         isCompleted: false,
-        userId: userId
+        createdBy: userId
       }
       const response = await ToDoServices.createToDo(data);
       console.log(response.data);

@@ -19,7 +19,7 @@ exports.getAllToDo = async (req,res) =>{
     try{
         const result = await ToDo.find({createdBy: userId});
         res.send(result);
-    } catch{err}{
+    } catch(err){
         console.log(err);
         res.status(400).send(err);
     }
