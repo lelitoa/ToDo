@@ -11,6 +11,7 @@ import { CheckCircleFilled, CheckCircleOutlined, DeleteOutlined, EditOutlined } 
 function ToDoList() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [url, setUrl] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allToDo, setAllToDo] = useState([]);
@@ -18,6 +19,7 @@ function ToDoList() {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTitle, setUpdatedTitle] = useState("");
   const [updatedDescription, setUpdatedDescription] = useState("");
+  const [updatedUrl, setUpdatedUrl] = useState("");
   const [updatedStatus, setUpdatedStatus] = useState("");
   const [currentTaskType, setCurrentTaskType ] = useState("incomplete");
   const [completedToDo, setCompletedToDo] = useState([]);
@@ -84,6 +86,7 @@ function ToDoList() {
       const data = {
         title,
         description,
+        url,
         isCompleted: false,
         createdBy: userId
       }
@@ -115,6 +118,7 @@ function ToDoList() {
     setCurrentEditItem(item);
     setUpdatedTitle(item?.title);
     setUpdatedDescription(item?.description);
+    setUpdatedUrl(item?.description);
     setUpdatedStatus(item?.isCompleted);
     setIsEditing(true);       
   }
@@ -151,6 +155,7 @@ function ToDoList() {
       const data = {
         title: updatedTitle,
         description: updatedDescription,
+        url: updatedUrl,
         isCompleted: updatedStatus
       }
       console.log(data);
@@ -224,6 +229,7 @@ function ToDoList() {
                     {item?.isCompleted ? <Tag color="cyan">Completed</Tag> : <Tag color="red">Incomplete</Tag>}
                   </div>
                   <p>{item?.description}</p>
+                  <p>{item?.url}</p>
                 </div>
                 <div className={styles.toDoCardFooter}>
                   <Tag>{getFormattedDate(item?.createdAt)}</Tag>
@@ -245,6 +251,7 @@ function ToDoList() {
                       {item?.isCompleted ? <Tag color="cyan">Completed</Tag> : <Tag color="red">Incomplete</Tag>}
                     </div>
                     <p>{item?.description}</p>
+                    <p>{item?.url}</p>
                   </div>
                   
                   <div className={styles.toDoCardFooter}>
@@ -266,12 +273,14 @@ function ToDoList() {
       
       <Modal confirmLoading={loading} title="Add New To Do Task" open={isAdding} onOk={handleSubmitTask} onCancel={()=>setIsAdding(false)}>
         <Input style={{marginBottom:'1rem'}} placeholder='Title' value={title} onChange={(e)=>setTitle(e.target.value)} />
-        <Input.TextArea placeholder='Description' value={description} onChange={(e)=>setDescription(e.target.value)} />
-      </Modal>
+        <Input.TextArea style={{marginBottom:'1rem'}} placeholder='Description' value={description} onChange={(e)=>setDescription(e.target.value)} /> 
+        <Input.TextArea placeholder='URL' value={url} onChange={(e)=>setUrl(e.target.value)} />
+      </Modal>  
 
       <Modal confirmLoading={loading} title={`Update ${currentEditItem.title}`} open={isEditing} onOk={handleUpdateTask} onCancel={()=>setIsEditing(false)}>
         <Input style={{marginBottom:'1rem'}} placeholder='Updated Title' value={updatedTitle} onChange={(e)=>setUpdatedTitle(e.target.value)} />
         <Input.TextArea style={{marginBottom:'1rem'}} placeholder='Updated Description' value={updatedDescription} onChange={(e)=>setUpdatedDescription(e.target.value)} />
+        <Input.TextArea style={{marginBottom:'1rem'}} placeholder='Updated URL' value={updatedUrl} onChange={(e)=>setUpdatedUrl(e.target.value)} />
         
         <Select
           onChange={(value)=>setUpdatedStatus(value)}
