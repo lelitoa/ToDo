@@ -172,10 +172,11 @@ function ToDoList() {
     }
   }
 
-  const handleTypeChange = (value) => {
-    console.log(value);
+  const handleTypeChange = () => {
+    // console.log(value);
+    const value = currentTaskType === 'incomplete' ? 'complete' : 'incomplete';
     setCurrentTaskType(value);
-    if(value==='incomplete'){
+    if(value ==='incomplete'){
       setCurrentToDoTask(inCompletedToDo);
     } else {
       setCurrentToDoTask(completedToDo);
@@ -202,21 +203,17 @@ function ToDoList() {
         <h2>Your Tasks</h2>
         <Input style={{width: '50%'}} onChange={handleSearch} placeholder='Search Your Task Here...' />
         <div>
-          <Button onClick={()=>setIsAdding(true)} type="primary" size="large">Add Task</Button>
-          <Select
-            value={currentTaskType}
-            style={{width: 180, marginLeft: '10px'}}
-            onChange={handleTypeChange}
-            size='large'
-            options={[
-              {value: "incomplete", label: "Incomplete"},
-              {value: "complete", label: "Complete"}
-            ]}
-          
-          />
+          <Button
+            type='primary'
+            style={{ padding: '20px' }}
+            onClick={handleTypeChange}
+          >
+            {currentTaskType === 'incomplete' ? 'Show   Complete' : 'Show Incomplete'}
+          </Button>
+          <Button style={{ marginLeft: '10px'}} onClick={()=>setIsAdding(true)} type="primary" size="large">Add Task</Button>
         </div>
       </div>
-      <Divider />
+      <Divider/>
 
       <div className={styles.toDoListCardWrapper}>
         {filteredToDo.length > 0 ? filteredToDo.map((item) => 
