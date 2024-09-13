@@ -137,7 +137,7 @@ function ToDoList() {
 
   const confirmDelete = async () => {
     try {
-      // const response = await ToDoServices.deleteToDo(taskToDelete._id);
+      const response = await ToDoServices.deleteToDo(taskToDelete._id);
       message.success(`${taskToDelete.title} is Deleted Successfully`);
       getAllToDo();
       setIsDeleteModalVisible(false);
@@ -313,7 +313,7 @@ function ToDoList() {
             value={dueDate ? moment(dueDate) : null}
             placeholder="Select Due Date"
         />
-      </Modal>  
+      </Modal>
 
       <Modal
       confirmLoading={loading}
