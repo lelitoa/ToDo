@@ -26,6 +26,8 @@ function ToDoList() {
   const [inCompletedToDo, setInCompletedToDo] = useState([]);
   const [currentToDoTask, setCurrentToDoTask] = useState([]);
   const [filteredToDo, setFilteredToDo] = useState([]);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   const navigate = useNavigate();
 
@@ -41,9 +43,9 @@ function ToDoList() {
       console.log(err);
       message.error(getErrorMessage(err));
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(()=> {
     let user = getUserDetails();
 
     const getAllToDo = async ()=> {
@@ -59,7 +61,7 @@ function ToDoList() {
     }
     if(user && user?.userId){
       getAllToDo();
-    }else{
+    } else {
       navigate('/login');
     }
 
@@ -123,17 +125,34 @@ function ToDoList() {
     setIsEditing(true);       
   }
 
-  const handleDelete = async (item) => {
+  // const handleDelete = async (item) => {
+  //   try {
+  //     const response = await ToDoServices.deleteToDo(item._id);
+  //     console.log(response.data);
+  //     message.success(`${item.title} is Delted Seccessfully`);
+  //     getAllToDo();
+  //   } catch (err) {
+  //     console.log(err);
+  //     console.log(getErrorMessage(err));
+  //   }
+  // }
+
+  const handleDelete = (item) => {
+    setTaskToDelete(item);
+    setIsDeleteModalVisible(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      const response = await ToDoServices.deleteToDo(item._id);
-      console.log(response.data);
-      message.success(`${item.title} is Delted Seccessfully`);
+      const response = await ToDoServices.deleteToDo(taskToDelete._id);
+      message.success(`${taskToDelete.title} is Deleted Successfully`);
       getAllToDo();
+      setIsDeleteModalVisible(false);
+      setTaskToDelete(null);
     } catch (err) {
-      console.log(err);
-      console.log(getErrorMessage(err));
+      message.error(getErrorMessage(err));
     }
-  }
+  };
 
   const handleUpdateStatus = async (id, status) => {
     console.log(id);
@@ -295,6 +314,17 @@ function ToDoList() {
           ]}
         />
       </Modal>
+
+      <Modal
+          title={`Are you sure you want to delete "${taskToDelete?.title}"?`}
+          visible={isDeleteModalVisible}
+          onOk={confirmDelete}
+          onCancel={() => setIsDeleteModalVisible(false)}
+          okText="Delete"
+          cancelText="Cancel"
+        >
+          <p>This action cannot be undone.</p>
+        </Modal>
     </section>
   </>
 )
