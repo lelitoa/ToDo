@@ -10,7 +10,8 @@ const toDoSchema = new Schema({
     createdBy: {
         ref: "User",
         type: Schema.ObjectId
-    }
+    },
+    dueDate: { type: Date, required: false }
 },
 {
     timestamps: true
