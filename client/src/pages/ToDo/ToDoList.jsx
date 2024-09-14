@@ -196,9 +196,14 @@ function ToDoList() {
     }
   }
 
+  const escapeRegExp = (string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape all special characters
+  }
+
   const handleSearch = (e) => {
     let query = e.target.value;
-    let filteredList = allToDo.filter((item) => item.title.toLowerCase().match(query.toLowerCase()));
+    let escapedQuery = escapeRegExp(query); // Escape special characters in the query
+    let filteredList = allToDo.filter((item) => item.title.toLowerCase().match(escapedQuery.toLowerCase()));
 
     console.log(filteredList);
     if (filteredList.length > 0 && query) {
