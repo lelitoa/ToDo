@@ -109,15 +109,15 @@ function ToDoList() {
     }
   }
 
-  const getFormattedDate = (value) => {
-    let date = new Date(value);
-    let dateString = date.toDateString();
-    let hh = date.getHours();
-    let min = date.getMinutes();
-    let ss = date.getSeconds();
-    let finalDate = `${dateString} at ${hh}:${min}:${ss}`;
-    return finalDate;
-  }
+  // const getFormattedDate = (value) => {
+  //   let date = new Date(value);
+  //   let dateString = date.toDateString();
+  //   let hh = date.getHours();
+  //   let min = date.getMinutes();
+  //   let ss = date.getSeconds();
+  //   let finalDate = `${dateString} at ${hh}:${min}:${ss}`;
+  //   return finalDate;
+  // }
 
   const handleEdit = (item) => {
     console.log(item);
@@ -137,7 +137,7 @@ function ToDoList() {
 
   const confirmDelete = async () => {
     try {
-      const response = await ToDoServices.deleteToDo(taskToDelete._id);
+      await ToDoServices.deleteToDo(taskToDelete._id);
       message.success(`${taskToDelete.title} is Deleted Successfully`);
       getAllToDo();
       setIsDeleteModalVisible(false);
@@ -236,16 +236,17 @@ function ToDoList() {
                 <div>
                   <div className={styles.toDoCardHeader}>
                     <h3>{item?.title}</h3>
-                    <Tooltip title={getFormattedDate(item?.createdAt)}>
+                    {/* <Tooltip title={getFormattedDate(item?.createdAt)}>
                       <Tag color="blue">{item?.dueDate ? moment(item.dueDate).format('DD-MM-YYYY') : 'No Due Date'}</Tag>
-                    </Tooltip>
+                    </Tooltip> */}
                     {item?.isCompleted ? <Tag color="cyan">Completed</Tag> : <Tag color="red">Incomplete</Tag>}
                   </div>
                   <p>{item?.description}</p>
                   <p>{item?.url}</p>
                 </div>
                 <div className={styles.toDoCardFooter}>
-                  <Tag>{getFormattedDate(item?.createdAt)}</Tag>
+                  {/* <Tag>{getFormattedDate(item?.createdAt)}</Tag> */}
+                  <Tag color="blue">{item?.dueDate ? moment(item.dueDate).format('DD-MM-YYYY') : 'No Due Date'}</Tag>
                   <div className={styles.toDoFooterAction}>
                     <Tooltip title="Edit Task?"><EditOutlined onClick={()=>handleEdit(item)} className={styles.actionIcon} /></Tooltip>
                     <Tooltip title="Delete Task?"><DeleteOutlined onClick={()=>handleDelete(item)} style={{color:'red'}} className={styles.actionIcon}/></Tooltip>
@@ -264,7 +265,8 @@ function ToDoList() {
                       {item?.isCompleted ? <Tag color="cyan">Completed</Tag> : <Tag color="red">Incomplete</Tag>}
                     </div>
                     <p>{item?.description}</p>
-                    <p>{item?.url}</p>
+                    {/* <p>{item?.url}</p> */}
+                  <a href={item?.url} target="_blank">{item?.url}</a>
                   </div>
                   
                   <div className={styles.toDoCardFooter}>
